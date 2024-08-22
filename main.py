@@ -14,6 +14,7 @@ WIDTH = 500
 HEIGHT = 670
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('Flappy Bird')
 clock = pygame.time.Clock()
 
 # colors
@@ -36,11 +37,26 @@ player_surf = pygame.image.load('assets/player.png').convert_alpha()
 player_surf = pygame.transform.scale(player_surf, (65, 65))
 player = player_surf.get_frect(center = (50, HEIGHT / 2))
 
+# masking
+player_mask = pygame.mask.from_surface(player_surf)
+
+pipe_surf = pygame.Surface((50, 310))
+pipe_surf.fill(white)
+pipe_bottom1_mask = pygame.mask.from_surface(pipe_surf)
+pipe_top1_mask = pygame.mask.from_surface(pipe_surf)
+pipe_bottom2_mask = pygame.mask.from_surface(pipe_surf)
+pipe_top2_mask = pygame.mask.from_surface(pipe_surf)
+# mask_image = pipe_top2_mask.to_surface()
+
+# mask_image = player_mask.to_surface()
+# mask_image1 = pipe_bottom1_mask.to_surface()
+
 # pipes
 pipe_bottom1 = pygame.FRect(200, HEIGHT - 150, 50, 310)
 pipe_top1 = pygame.FRect(200, 0, 50, 310)
 pipe_bottom2 = pygame.FRect(400, HEIGHT - 250, 50, 310)
 pipe_top2 = pygame.FRect(400, -100, 50, 310)
+
 
 # sounds
 flap_sound = pygame.mixer.Sound('assets/flap.mp3')
@@ -52,6 +68,12 @@ font = pygame.font.Font("freesansbold.ttf", 24)
 score = 0
 
 # functions
+def offset(player, pipe):
+    off = (pipe.x - player.x, pipe.y - player.y)
+    return off
+
+
+
 def player_ani(player):
     global score
     player.y += player_jump
@@ -67,9 +89,17 @@ def player_ani(player):
     # collisions
     # if (abs(player.right - pipe_bottom1.left) <= 10) or (abs(player.right - pipe_bottom2.left) <= 10) or (abs(player.right - pipe_top1.left) <= 10) or (abs(player.right - pipe_top2.left) <= 10):
     #     if (abs(player.bottom - pipe_bottom1.top) <= 10) or (abs(player.bottom - pipe_bottom2.top) <= 10) or (abs(player.top - pipe_top1.bottom) <= 10) or (abs(player.top - pipe_top2.bottom) <= 10):
-    if (player.colliderect(pipe_bottom1) or player.colliderect(pipe_bottom2) or player.colliderect(pipe_top1) or player.colliderect(pipe_top2)):
-                pygame.mixer.Sound.play(die_sound)
-                reset()
+    
+
+    # if (player.colliderect(pipe_bottom1) or player.colliderect(pipe_bottom2) or player.colliderect(pipe_top1) or player.colliderect(pipe_top2)):
+    #             pygame.mixer.Sound.play(die_sound)
+    #             reset()
+
+    # mask collisions
+    if (player_mask.overlap(pipe_bottom1_mask, offset(player, pipe_bottom1))) or (player_mask.overlap(pipe_bottom2_mask, offset(player, pipe_bottom2))) or (player_mask.overlap(pipe_top1_mask, offset(player, pipe_top1))) or (player_mask.overlap(pipe_top2_mask, offset(player, pipe_top2))):
+        pygame.mixer.Sound.play(die_sound)
+        reset()
+    
 
     # pipes
     if player.right >= WIDTH:
@@ -168,18 +198,29 @@ while running:
     screen.blit(score_text, (WIDTH / 2 - 50, HEIGHT / 2))
     
     # player
-    player = screen.blit(player_surf, player)
+    # player = screen.blit(player_surf, player)
     player_ani(player)
     # player.y += gravity
-    pygame.draw.rect(screen, white, pipe_bottom1)
-    pygame.draw.rect(screen, white, pipe_top1)
-    pygame.draw.rect(screen, white, pipe_bottom2)
-    pygame.draw.rect(screen, white, pipe_top2)
-
+    
+    # pygame.draw.rect(screen, white, pipe_bottom1)
+    # pygame.draw.rect(screen, white, pipe_top1)
+    # pygame.draw.rect(screen, white, pipe_bottom2)
+    # pygame.draw.rect(screen, white, pipe_top2)
+    
+    # screen.blit(mask_image, (0, 0))
     # for i in range(2):
     #     pipes.append(pipe_bottom)
     # for pipe in pipes:
     #     pygame.draw.rect(screen, black, pipe)
+
+    screen.blit(player_surf, player)
+    screen.blit(pipe_surf, pipe_bottom1)
+    screen.blit(pipe_surf, pipe_top1)
+    screen.blit(pipe_surf, pipe_bottom2)
+    screen.blit(pipe_surf, pipe_top2)
+    
+    # screen.blit(mask_image, player)
+    # screen.blit(mask_image1, pipe_bottom1)
 
 
     # update display
