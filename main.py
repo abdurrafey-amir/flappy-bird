@@ -73,6 +73,37 @@ def offset(player, pipe):
     return off
 
 
+def pipe_spawn():
+    
+    pipe_1_x = random.randint(100, 250)
+    pipe_2_x = random.randint(250, 450)
+    if abs(pipe_1_x - pipe_2_x) <= 100:
+        pipe_1_x = random.randint(100, 250)
+        pipe_2_x = random.randint(250, 400)
+    if abs(pipe_1_x - pipe_2_x) <= 100:
+        pipe_1_x = random.randint(100, 250)
+        pipe_2_x = random.randint(250, 400)
+    pipe_bottom1.x = pipe_1_x
+    pipe_top1.x = pipe_1_x
+    pipe_bottom2.x = pipe_2_x
+    pipe_top2.x = pipe_2_x
+    pipe_bottom1_y = HEIGHT - random.randint(150, 250)
+    pipe_bottom2_y = HEIGHT - random.randint(150, 250)
+    pipe_top1_y = max(0, pipe_bottom1_y - random.randint(100, 200))
+    pipe_top2_y = max(0, pipe_bottom2_y - random.randint(100, 200))
+    pipe_bottom1.top = pipe_bottom1_y
+    pipe_top1.bottom = pipe_top1_y
+    pipe_bottom2.top = pipe_bottom2_y
+    pipe_top2.bottom = pipe_top2_y
+    check = True
+    while check:
+        if not pipe_top1.top  <= 0:
+            pipe_top1.top -= 1
+        if not pipe_top2.top <= 0:
+            pipe_top2.top -= 1
+        if pipe_top1.top <= 0 and pipe_top2.top <= 0:
+            check = False
+
 
 def player_ani(player):
     global score
@@ -107,36 +138,69 @@ def player_ani(player):
         player.x = 50
         score += 1
         
-        pipe_1_x = random.randint(100, 250)
-        pipe_2_x = random.randint(250, 450)
+        # spawn the pipes at random positions
+        pipe_spawn()
 
-        if (pipe_1_x - pipe_2_x < 100):
-            pipe_1_x = random.randint(100, 250)
-            pipe_2_x = random.randint(250, 400)
-            if (pipe_1_x - pipe_2_x < 100):
-                pipe_1_x = random.randint(100, 250)
-                pipe_2_x = random.randint(250, 400)
+        if pipe_bottom1.bottom > HEIGHT:
+            pipe_spawn()
+        if pipe_top1.top < 0:
+            pipe_spawn()
+        if pipe_bottom2.bottom > HEIGHT:
+            pipe_spawn()
+        if pipe_top2.top < 0:
+            pipe_spawn()
 
-        # while (pipe_1 - pipe_2 < 100) or (pipe_1 < 100) or (pipe_2 < 100):
-        #     pipe_1 = random.randint(100, 250)
-        #     pipe_2 = random.randint(250, 400)
-
-        pipe_bottom1.x = pipe_1_x
-        pipe_top1.x = pipe_1_x
         
-        pipe_bottom2.x = pipe_2_x
-        pipe_top2.x = pipe_2_x
 
-        pipe_bottom1_y = random.randint(335, 450)
-        pipe_top1_y = random.randint(200, 335)
-        pipe_bottom2_y = random.randint(335, 450)
-        pipe_top2_y = random.randint(200, 335)
+        # pipe_1_x = random.randint(100, 250)
+        # pipe_2_x = random.randint(250, 450)
 
-    
-        pipe_bottom1.top = pipe_bottom1_y
-        pipe_top1.bottom = pipe_top1_y
-        pipe_bottom2.top = pipe_bottom2_y
-        pipe_top2.bottom = pipe_top2_y
+        # if (pipe_1_x - pipe_2_x <= 100):
+        #     pipe_1_x = random.randint(100, 250)
+        #     pipe_2_x = random.randint(250, 400)
+        #     if (pipe_1_x - pipe_2_x <= 100):
+        #         pipe_1_x = random.randint(100, 250)
+        #         pipe_2_x = random.randint(250, 400)
+
+        # # while (pipe_1 - pipe_2 < 100) or (pipe_1 < 100) or (pipe_2 < 100):
+        # #     pipe_1 = random.randint(100, 250)
+        # #     pipe_2 = random.randint(250, 400)
+
+        # pipe_bottom1.x = pipe_1_x
+        # pipe_top1.x = pipe_1_x
+        
+        # pipe_bottom2.x = pipe_2_x
+        # pipe_top2.x = pipe_2_x
+
+        # pipe_bottom1_y = random.randint(300, 450)
+        # pipe_top1_y = random.randint(200, 300)
+        # pipe_bottom2_y = random.randint(300, 450)
+        # pipe_top2_y = random.randint(200, 300)
+
+        # if pipe_top1_y - pipe_bottom1_y < 100:
+        #     pipe_bottom1_y = random.randint(300, 450)
+        #     pipe_top1_y = random.randint(200, 300)
+        #     if pipe_top1_y - pipe_bottom1_y < 100:
+        #         pipe_bottom1_y = random.randint(300, 450)
+        #         pipe_top1_y = random.randint(200, 300)
+        
+        
+        # pipe_bottom1.top = pipe_bottom1_y
+        # pipe_top1.bottom = pipe_top1_y
+        # pipe_bottom2.top = pipe_bottom2_y
+        # pipe_top2.bottom = pipe_top2_y
+        
+        
+
+
+        # if pipe_bottom1.top >= HEIGHT:
+        #     pipe_bottom1.top = HEIGHT - 150
+        # if pipe_top1.bottom <= 0:
+        #     pipe_top1.bottom = 0
+        # if pipe_bottom2.top >= HEIGHT:
+        #     pipe_bottom2.top = HEIGHT - 150
+        # if pipe_top2.bottom <= 0:
+        #     pipe_top2.bottom = 0
 
     
         
